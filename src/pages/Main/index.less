@@ -1,0 +1,45 @@
+@base: #fe0000;
+
+.container {
+    height: 100%;
+    display: flex;
+    background: #fff;
+}
+
+.aside {
+    width: 500px;
+    background: @base;
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    color: @base;
+    font-size: 20px;
+
+    .header {
+        height: 60px;
+        line-height: 60px;
+        text-align: right;
+
+        span {
+            display: inline-block;
+            height: 35px;
+            line-height: 35px;
+            padding: 0px 10px;
+            border: 1px solid #fe0000;
+            border-radius: 17px;
+            margin-right: 20px;
+        }
+    }
+
+    .iconfont {
+        font-size: 20px;
+    }
+
+    .content {
+        flex: 1;
+    }
+
+}
