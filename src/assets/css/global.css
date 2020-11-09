@@ -128,3 +128,14 @@ div[role='tab'] {
   background: #fe0000 !important;
   color: #fff !important;
 }
+
+.hideCon .van-field__control{
+  border: 1px solid #ccc;
+  width: 190px;
+  margin-top: 15%;
+}
+
+.hideCon .van-field__body{
+  display: flex;
+  justify-content: center;
+}

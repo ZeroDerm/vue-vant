@@ -10,57 +10,16 @@
     </div>
     <div class='content'>
       <div class="header">
-        <span  v-for="(item,index) in themeList" :key="item.id" class="theme-text" v-bind:class="is_active == item.id?'span-active':''" @click="tapClass(item.id)">{{item.name}}</span>
+        <span  v-for="(item,index) in classList" :key="item.id" class="theme-text" v-bind:class="is_active == item.id?'span-active':''" @click="tapClass(item.id)">{{item.name}}</span>
 
         <i class="iconfont icon-shuangxiajiantou-"></i>
       </div>
       <div class="album">
         <div class="img-item" v-for="(i,d) in itemList" :key="i.id">
-          <img :src="prefix + i.url + '1.jpg_720.jpg'" alt="" @click="tapAside(i.id)" :class="imgSelected == (i.id)?'imgSelected':''">
+          <img :src="prefix + i.url + '1.jpg'" alt="" @click="tapAside(i.id)" :class="imgSelected == (i.id)?'imgSelected':''">
           <i class="iconfont icon-icon-test"></i>
           <i class="iconfont icon-tick" @click="checkTap(i.id)" :class="is_selectedArr.indexOf(i.id) == -1?'is_selected':''"></i>
         </div>
-<!--         <div class="img-item">
-          <img src="static/img/组9.png" alt="">
-          <i class="iconfont icon-icon-test"></i>
-          <i class="iconfont icon-tick"></i>
-        </div>
-        <div class="img-item">
-          <img src="static/img/组9.png" alt="">
-          <i class="iconfont icon-icon-test"></i>
-          <i class="iconfont icon-tick"></i>
-        </div>
-        <div class="img-item">
-          <img src="static/img/组9.png" alt="">
-          <i class="iconfont icon-icon-test"></i>
-          <i class="iconfont icon-tick"></i>
-        </div>
-        <div class="img-item">
-          <img src="static/img/组9.png" alt="">
-          <i class="iconfont icon-icon-test"></i>
-          <i class="iconfont icon-tick"></i>
-        </div>
-        <div class="img-item">
-          <img src="static/img/组9.png" alt="">
-          <i class="iconfont icon-icon-test"></i>
-          <i class="iconfont icon-tick"></i>
-        </div>
-        <div class="img-item">
-          <img src="static/img/组9.png" alt="">
-          <i class="iconfont icon-icon-test"></i>
-          <i class="iconfont icon-tick"></i>
-        </div>
-        <div class="img-item">
-          <img src="static/img/组9.png" alt="">
-          <i class="iconfont icon-icon-test"></i>
-          <i class="iconfont icon-tick"></i>
-        </div>
-
-        <div v-for="(item,index) in 4" :key="index" class="img-item">
-          <img src="static/img/组9.png" alt="">
-          <i class="iconfont icon-icon-test"></i>
-          <i class="iconfont icon-tick"></i>
-        </div> -->
 
       </div>
       <div class="paging">
@@ -79,7 +38,7 @@ Vue.use(Button);
 Vue.use(Swipe);
 Vue.use(SwipeItem);
 Vue.use(Lazyload);
-
+var Event = new Vue();
 export default {
   name: 'Main',
   data () {
@@ -87,6 +46,7 @@ export default {
       active: 2,
       currentPage: 1,
       themeList:"",
+      classList:'',
       is_active:1,
       itemList:"",
       totalNum:'',
@@ -104,7 +64,7 @@ export default {
         _this.$axios.post('http://192.168.1.25/studio_vr/public/index.php/getClassInfo',_this.$qs.stringify({tid:1}))
         .then(res=> {
           let data=res.data.data;
-           _this.themeList = data;
+           _this.classList = data;
         })
         .catch(error=>{
           console.log(error)
@@ -145,26 +105,51 @@ export default {
       tapAside(id){
         //post请求接口
         let _this=this;
-        _this.$axios.post('http://192.168.1.25/studio_vr/public/index.php/getImgInfo',_this.$qs.stringify({id:id}))
-        .then(res=> {
-          let data=res.data.data;
-          if(this.is_selectedArr.indexOf(id) == -1){
-            Toast("请勾选！");       
-          }else{
+        if(this.is_selectedArr.indexOf(id) == -1){
+          Toast("请勾选！");
+        }else{
+          _this.$axios.post('http://192.168.1.25/studio_vr/public/index.php/getImgInfo',_this.$qs.stringify({id:id}))
+          .then(res=> {
+            let data=res.data.data;
+            _this.asideArr = [];
             for(let item in data){
-             _this.asideArr.push(_this.prefix + data[item]);
+              _this.asideArr.push(_this.prefix + data[item]);
             }
             _this.imgSelected = id;
-          }
+            // 传递参数
+            _this.sendInfo();
+          })
+          .catch(error=>{
+            console.log(error)
+          })
+        }
+      },
+      sendInfo(){
+        let mainArr = [];
+        mainArr.push(this.is_selectedArr,this.class_id,this.imgSelected);
+        this.$emit('getMessage', mainArr);
+      },
+      getTaskInfo(id){
+        //post请求接口
+        let _this=this;
+        _this.$axios.post('http://192.168.1.25/studio_vr/public/index.php/getTaskInfo',_this.$qs.stringify({id:id}))
+        .then(res=> {
+          let data = res.data.data.jsonStr;
+          this.class_id = data.cid;
+          this.imgSelected = data.imgSelected;
+          this.is_selectedArr = data.str;
         })
         .catch(error=>{
           console.log(error)
         })
-      },
+      }
   },
   created(){
     this.loadPost();
     this.getItemInfo(this.class_id,this.currentPage);
+    if(this.$route.query.id){
+      this.getTaskInfo(this.$route.query.id);
+    }
   }
 }
 

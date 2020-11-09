@@ -42,4 +42,64 @@
         flex: 1;
     }
 
+    .selected{
+        position: relative;
+
+        span{
+            position: absolute;
+            right: -40px;
+            top: -14px;
+            color: #fff;
+            border: 1px solid #000;
+            background-color: #000;
+        }
+    }
+
+}
+
+.hideCon{
+    width:500px;
+    height:300px;
+    background:#fff;
+    border-radius: 5px;
+    overflow:hidden;
+    p{
+        position:relative;
+        margin:0;
+        height: 50px;
+        background:#fff;
+        line-height:50px;
+        background-color: rgb(246,247,251);
+        color:rgb(100,100,102);
+
+        .van-icon{
+            position:absolute;
+            top:50%;
+            right:20px;
+            transform: translateY(-50%);
+        }
+    }
+
+    .inner{
+
+        height: 200px;
+        display:flex;
+        justify-content: space-between;
+        text-align: center;
+    }
+    .menu{
+        position: relative;
+        height: 50px;
+    }
+
+    .menu .van-button--normal:first-child{
+        position: absolute;
+        right: 100px;
+    }
+    .menu .van-button--normal:last-child{
+        position: absolute;
+        right: 20px;
+    }
+
+
 }
