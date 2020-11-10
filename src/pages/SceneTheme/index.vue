@@ -96,7 +96,7 @@ export default {
         if(this.is_selectedArr.indexOf(id) == -1){
           this.is_selectedArr.push(id);
           //渲染asside模块 
-          // this.tapAside(id);
+          this.tapAside(id);
         }else{
           let i = this.is_selectedArr.indexOf(id);
           this.is_selectedArr.splice(i,1);
@@ -105,24 +105,20 @@ export default {
       tapAside(id){
         //post请求接口
         let _this=this;
-        if(this.is_selectedArr.indexOf(id) == -1){
-          Toast("请勾选！");
-        }else{
-          _this.$axios.post('http://192.168.1.25/studio_vr/public/index.php/getImgInfo',_this.$qs.stringify({id:id}))
-          .then(res=> {
-            let data=res.data.data;
-            _this.asideArr = [];
-            for(let item in data){
-              _this.asideArr.push(_this.prefix + data[item]);
-            }
-            _this.imgSelected = id;
-            // 传递参数
-            _this.sendInfo();
-          })
-          .catch(error=>{
-            console.log(error)
-          })
-        }
+        _this.$axios.post('http://192.168.1.25/studio_vr/public/index.php/getImgInfo',_this.$qs.stringify({id:id}))
+        .then(res=> {
+          let data=res.data.data;
+          _this.asideArr = [];
+          for(let item in data){
+            _this.asideArr.push(_this.prefix + data[item]);
+          }
+          _this.imgSelected = id;
+          // 传递参数
+          _this.sendInfo();
+        })
+        .catch(error=>{
+          console.log(error)
+        })
       },
       sendInfo(){
         let mainArr = [];
@@ -138,6 +134,7 @@ export default {
           this.class_id = data.cid;
           this.imgSelected = data.imgSelected;
           this.is_selectedArr = data.str;
+          _this.sendInfo();
         })
         .catch(error=>{
           console.log(error)

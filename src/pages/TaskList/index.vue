@@ -21,7 +21,7 @@
 					<td>{{item.name}}</td>
 					<td><van-icon name="records" @click="editTask(item.id)"/></td>
 					<td><van-icon name="close" @click="delTask(item.id)"/></td>
-					<td class="checkTask"><van-icon name="circle" class="td-q" /><i class="td-g" :class="is_opacityArr.indexOf(item.id) == -1?'td-hide':''" @click="checkTask(item.id)">√</i></td>
+					<td class="checkTask"><van-icon name="circle" class="td-q" @click="checkTask(item.id)" /><i class="td-g" :class="is_opacityArr.indexOf(item.id) == -1?'td-hide':''" @click="checkTask(item.id)" >√</i></td>
 				</tr>
 			</table>
 		</van-row>

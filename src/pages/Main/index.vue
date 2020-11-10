@@ -5,6 +5,9 @@
     </div>
     <div class="main">
       <div class="header">
+        <span class="selected" @click="editTask()" v-show="editShow">
+          保存任务
+        </span>
         <span class="selected" @click="showTask()">
           <i class="iconfont icon-chakan"></i>
           <span class="iconfont" v-show="taskNum">{{taskNum}}</span>
@@ -76,6 +79,7 @@ export default {
       show:false,
       value: '',
       taskNum:0,
+      editShow:false
     };
   },
   methods:{
@@ -87,7 +91,6 @@ export default {
       }
     },
     showMsg (val) {   // methods方法  val即为子组件传过来的值
-      // console.log(val)
       this.is_selectedArr = val[0];
       this.class_id = val[1];
       this.imgSelected = val[2];
@@ -100,6 +103,7 @@ export default {
         let data=res.data;
         if(data.code){
           _this.show = false;
+          _this.taskNum += 1;
         }
         Toast(data.msg);
       })
@@ -123,10 +127,25 @@ export default {
       .catch(error=>{
         console.log(error)
       })
-    }  
+    },
+    editTask(){
+      //post请求接口
+      let _this=this;
+      _this.$axios.post('http://192.168.1.25/studio_vr/public/index.php/editTaskInfo',_this.$qs.stringify({id:this.$route.query.id,tid:1,cid:this.class_id,str:this.is_selectedArr,imgSelected:this.imgSelected}))
+      .then(res=> {
+        let data=res.data;
+        Toast(data.msg);
+      })
+      .catch(error=>{
+        console.log(error)
+      })
+    }
   },
   created(){
     this.getTaskNum();
+    if(this.$route.query.id){
+      this.editShow = true;
+    }
   }
 }
 </script>
